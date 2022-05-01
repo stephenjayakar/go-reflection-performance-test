@@ -5,14 +5,14 @@ import (
 	"reflect"
 )
 
-// type Set interface {
-// 	Insert(any)
-// 	Contains(any) bool
-// 	// Equal(Set) bool
-// }
-
 type MapSet struct {
 	ds map[any]any
+}
+
+func NewMapSet() MapSet {
+	return MapSet{
+		ds: map[any]any{},
+	}
 }
 
 func (s *MapSet) Insert(elem any) {
@@ -28,6 +28,12 @@ type SliceSetExp[T comparable] struct {
 	ds []T
 }
 
+func NewSliceSetExp[T comparable]() SliceSetExp[T] {
+	return SliceSetExp[T]{
+		ds: []T{},
+	}
+}
+
 func (s *SliceSetExp[T]) Insert(elem T) {
 	s.ds = append(s.ds, elem)
 }
@@ -38,6 +44,12 @@ func (s *SliceSetExp[T]) Contains(elem T) bool {
 
 type ReflectSliceSet struct {
 	ds []any
+}
+
+func NewReflectSliceSet() ReflectSliceSet {
+	return ReflectSliceSet{
+		ds: []any{},
+	}
 }
 
 func (s *ReflectSliceSet) Insert(elem any) {

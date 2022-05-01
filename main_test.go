@@ -3,13 +3,20 @@ package main
 import (
 	"reflect"
 	"testing"
+	"math/rand"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMain(t *testing.T) {
-	ms := MapSet{
-		ds: map[any]any{},
+	now := time.Now()
+	rand.Seed(now.Unix())
+	intValues := rand.Perm(100)
+
+	ms := NewMapSet()
+	for _, val := range intValues {
+
 	}
 
 	ms.Insert(2)
