@@ -1,24 +1,10 @@
 # Thesis
 
-The accepted paradigm for doing set contains (or set operations in general) pre Go 1.18 (generics) is to use a `map[type]struct{}`. I believe that using this for small datasets is going to be slower than 
-* cache coherency
+The accepted paradigm for doing set contains (or set operations in general) pre Go 1.18 (generics) is to use a `map[type]struct{}`. I believe that using this for small datasets is going to be slower than using slices. I also just don't like the way `map[string]struct{}{}` looks. Disgusting.
 
-Make sure to allow arbitrary elements inside the set?
-* Can I even do this for the map example?
+# String Results
 
-Set contains
-* Using slices.Contains
-* Using map
-* Using interface{} + reflect for a 
-
-Set equals
-* Using map
-* Using sort + slices.Equal
-* using reflect.DeepEqual
-
-# Results
-
-## Summary for strings
+## Summary
 
 Slices only behaved better on small N, and only slightly. When we were at `N = 100`, we already are at a 30% faster using `MapSet`. Looks like for most string cases, using a `map` as the underlying storage makes sense.
 
@@ -46,6 +32,28 @@ BenchmarkSliceSetExp-10    	 1000000	      1052 ns/op
 BenchmarkMapSet-10         	  987474	      1222 ns/op
 ```
 
-## Open questions
+# Int results
 
-Wonder if it's different for ints?
+## Summary
+
+Ints perform better as slices for longer. At `N = 100`, we still have it at about 54% faster. However, the gap really widens once we get to `N = 1000`.
+
+## N = 100
+```
+BenchmarkIntMapSet-10      	  197214	      5917 ns/op
+BenchmarkIntSliceSet-10    	  435561	      2709 ns/op
+```
+
+## N = 10
+
+```
+BenchmarkIntMapSet-10      	 3872775	       311.5 ns/op
+BenchmarkIntSliceSet-10    	 8202166	       144.7 ns/op
+```
+
+## N = 1000
+
+```
+BenchmarkIntMapSet-10      	   20090	     60114 ns/op
+BenchmarkIntSliceSet-10    	    6854	    175596 ns/op
+```
