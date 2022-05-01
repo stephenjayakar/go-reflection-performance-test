@@ -2,63 +2,62 @@ package main
 
 import (
 	"golang.org/x/exp/slices"
-	"reflect"
 )
 
 type MapSet struct {
-	ds map[any]any
+	ds map[string]struct{}
 }
 
 func NewMapSet() MapSet {
 	return MapSet{
-		ds: map[any]any{},
+		ds: map[string]struct{}{},
 	}
 }
 
-func (s *MapSet) Insert(elem any) {
+func (s *MapSet) Insert(elem string) {
 	s.ds[elem] = struct{}{}
 }
 
-func (s *MapSet) Contains(elem any) bool {
+func (s *MapSet) Contains(elem string) bool {
 	_, ok := s.ds[elem]
 	return ok
 }
 
-type SliceSetExp[T comparable] struct {
-	ds []T
+type SliceSetExp struct {
+	ds []string
 }
 
-func NewSliceSetExp[T comparable]() SliceSetExp[T] {
-	return SliceSetExp[T]{
-		ds: []T{},
+func NewSliceSetExp() SliceSetExp {
+	return SliceSetExp{
+		ds: []string{},
 	}
 }
 
-func (s *SliceSetExp[T]) Insert(elem T) {
+func (s *SliceSetExp) Insert(elem string) {
 	s.ds = append(s.ds, elem)
 }
 
-func (s *SliceSetExp[T]) Contains(elem T) bool {
+func (s *SliceSetExp) Contains(elem string) bool {
 	return slices.Contains(s.ds, elem)
 }
 
-type ReflectSliceSet struct {
-	ds []any
+type SliceSet struct {
+	ds []string
 }
 
-func NewReflectSliceSet() ReflectSliceSet {
-	return ReflectSliceSet{
-		ds: []any{},
+func NewSliceSet() SliceSet {
+	return SliceSet{
+		ds: []string{},
 	}
 }
 
-func (s *ReflectSliceSet) Insert(elem any) {
+func (s *SliceSet) Insert(elem string) {
 	s.ds = append(s.ds, elem)
 }
 
-func (s *ReflectSliceSet) Contains(elem any) bool {
+func (s *SliceSet) Contains(elem string) bool {
 	for _, x := range s.ds {
-		if reflect.DeepEqual(x, elem) {
+		if x == elem {
 			return true
 		}
 	}

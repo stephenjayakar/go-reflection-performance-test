@@ -1,41 +1,63 @@
 package main
 
 import (
-	"reflect"
 	"testing"
 	"math/rand"
 	"time"
+	"fmt"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMain(t *testing.T) {
+const N = 10
+
+func BenchmarkSliceSet(b *testing.B) {
 	now := time.Now()
 	rand.Seed(now.Unix())
-	intValues := rand.Perm(100)
+	intValues := rand.Perm(N)
+	indexOrder := rand.Perm(N)
 
-	ms := NewMapSet()
-	for _, val := range intValues {
-
+	for n := 0; n < b.N; n++ {
+		ms := NewSliceSet()
+		for _, val := range intValues {
+			ms.Insert(fmt.Sprint(val))
+		}
+		for _, index := range indexOrder {
+			assert.True(b, ms.Contains(fmt.Sprint(intValues[index])))
+		}
 	}
+}
 
-	ms.Insert(2)
-	ms.Insert("Meow")
-	assert.True(t, ms.Contains(2))
-	assert.True(t, ms.Contains("Meow"))
-	assert.False(t, ms.Contains(3))
-	assert.False(t, ms.Contains("adsf"))
+func BenchmarkSliceSetExp(b *testing.B) {
+	now := time.Now()
+	rand.Seed(now.Unix())
+	intValues := rand.Perm(N)
+	indexOrder := rand.Perm(N)
 
-	rs := ReflectSliceSet{
-		ds: []any{},
+	for n := 0; n < b.N; n++ {
+		ms := NewSliceSetExp()
+		for _, val := range intValues {
+			ms.Insert(fmt.Sprint(val))
+		}
+		for _, index := range indexOrder {
+			assert.True(b, ms.Contains(fmt.Sprint(intValues[index])))
+		}
 	}
+}
 
-	assert.True(t, reflect.DeepEqual(2, 2))
+func BenchmarkMapSet(b *testing.B) {
+	now := time.Now()
+	rand.Seed(now.Unix())
+	intValues := rand.Perm(N)
+	indexOrder := rand.Perm(N)
 
-	rs.Insert(2)
-	rs.Insert("Meow")
-	assert.True(t, rs.Contains(2))
-	assert.True(t, rs.Contains("Meow"))
-	assert.False(t, rs.Contains(3))
-	assert.False(t, rs.Contains("adsf"))
+	for n := 0; n < b.N; n++ {
+		ms := NewMapSet()
+		for _, val := range intValues {
+			ms.Insert(fmt.Sprint(val))
+		}
+		for _, index := range indexOrder {
+			assert.True(b, ms.Contains(fmt.Sprint(intValues[index])))
+		}
+	}
 }
